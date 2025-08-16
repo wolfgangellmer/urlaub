@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ★ SCHRITT 1: Ändern Sie hier den Titel des Quiz im Browser-Tab -->
+<title>Dynamisches Quiz Template</title>
+
+<!-- Moderne Schriftarten von Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+    /* 
+    ★ SCHRITT 2 (Optional): Passen Sie hier das Design an!
+      Ändern Sie einfach die Farbwerte (z.B. #FF7F50), um das Quiz
+      an Ihr Thema anzupassen.
+      - Für ein Wald-Quiz: Grüne und braune Töne
+      - Für ein Winter-Quiz: Blaue und weiße Töne
+    */
+    :root {
+        --bg-gradient-start: #a2d2ff; /* Hintergrund-Verlauf oben */
+        --bg-gradient-end: #fff8e7;   /* Hintergrund-Verlauf unten */
+        --container-bg: rgba(255, 255, 255, 0.85); /* Hintergrund des Quiz-Fensters */
+        --header-color: #FF7F50;    /* Farbe der Überschrift & Buttons */
+        --text-color: #333;
+        --question-color: #008080;  /* Farbe der Fragen */
+        --accent-color: #FFB347;    /* Akzentfarbe (z.B. Fortschrittsbalken) */
+        --correct-bg: #e0f2f1;      /* Hintergrund für richtige Antworten */
+        --correct-border: #008080;
+        --incorrect-bg: #ffebee;    /* Hintergrund für falsche Antworten */
+        --incorrect-border: #d32f2f;
+        --font-main: 'Poppins', sans-serif;
+        --font-display: 'Pacifico', cursive;
+    }
+
+    /* --- Ab hier muss in der Regel nichts mehr geändert werden --- */
+    
+    body {
+        font-family: var(--font-main);
+        background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 70%);
+        background-attachment: fixed;
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+    }
+
+    header {
+        color: white;
+        text-align: center;
+        padding: 25px 15px;
+        font-family: var(--font-display);
+        font-size: 2.5em;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        background-color: var(--header-color);
+    }
+
+    .container {
+        padding: 20px;
+        max-width: 700px;
+        margin: 30px auto;
+        background: var(--container-bg);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .progress-container {
+        width: 100%;
+        background-color: #eee;
+        border-radius: 10px;
+        margin-bottom: 25px;
+    }
+    .progress-bar {
+        width: 0%;
+        height: 22px;
+        background: linear-gradient(to right, var(--accent-color), var(--header-color));
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        transition: width 0.4s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .question-section { margin-bottom: 20px; }
+    h2 {
+        color: var(--question-color);
+        text-align: center;
+        margin-top: 0;
+        border-bottom: 3px solid var(--accent-color);
+        padding-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .question-block { margin-bottom: 25px; }
+
+    .question-title-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        font-weight: 600;
+        color: var(--question-color);
+        font-size: 1.1em;
+    }
+    
+    .answers label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 8px 0;
+        padding: 12px 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid #ddd;
+        background: white;
+    }
+
+    .answers label:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .speak-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.3em;
+        line-height: 1;
+        padding: 0 5px;
+        color: #777;
+        transition: color 0.2s;
+    }
+    .speak-btn:hover { color: var(--header-color); }
+    .answer-text { flex-grow: 1; }
+
+    .answers input[type="radio"] {
+        margin-right: 5px;
+        accent-color: var(--header-color);
+    }
+    
+    .answers label.correct {
+        background-color: var(--correct-bg);
+        border-color: var(--correct-border);
+        font-weight: 600;
+        color: var(--correct-border);
+    }
+    .answers label.correct::before { content: '✔ '; }
+
+    .answers label.incorrect {
+        background-color: var(--incorrect-bg);
+        border-color: var(--incorrect-border);
+    }
+    .answers label.incorrect::before { content: '✖ '; }
+
+    .button {
+        color: white;
+        border: none;
+        padding: 15px 25px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 10px;
+        display: block;
+        width: 100%;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+
+    #submit-btn { background: var(--header-color); }
+    #retry-btn { background-color: #6c757d; }
+
+    #result {
+        font-size: 1.3em;
+        font-weight: 600;
+        text-align: center;
+        margin-top: 25px;
+        color: var(--question-color);
+        padding: 20px;
+        border-radius: 10px;
+        background-color: var(--container-bg);
+    }
+    
+    .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- ★ SCHRITT 3: Ändern Sie hier die große Überschrift des Quiz -->
+<header>Dein individuelles Quiz</header>
+
+<div class="container">
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <form id="quiz-form">
+        <div id="dynamic-quiz-container"></div>
+        <button type="submit" id="submit-btn" class="button">Auswerten</button>
+    </form>
+    
+    <div id="result" class="hidden"></div>
+    <button id="retry-btn" class="button hidden">Erneut versuchen</button>
+</div>
+
+<script>
+/*
+=============================================================================
+★ SCHRITT 4: FÜGEN SIE HIER IHRE FRAGEN EIN ★
+=============================================================================
+- Jede Frage ist ein Objekt in geschweiften Klammern {}.
+- Trennen Sie die Objekte mit einem Komma.
+- Kopieren Sie einfach den Vorlagen-Block, um neue Fragen hinzuzufügen.
+
+Struktur einer Frage:
+- category: Text, der als Überschrift für eine Gruppe von Fragen dient.
+- q:        Der Text der Frage.
+- a:        Die Antwortmöglichkeiten. 'a', 'b', 'c' etc. sind die internen Schlüssel.
+- correct:  Der Schlüssel der richtigen Antwort (muss mit einem Schlüssel aus 'a' übereinstimmen).
+*/
+
+// VORLAGE ZUM KOPIEREN FÜR EINE NEUE FRAGE:
+/*
+{ 
+    category: "Ihre Kategorie", 
+    q: "Ihr Fragetext?", 
+    a: { 
+        a: "Antwort A 🅰️", 
+        b: "Antwort B 🅱️", 
+        c: "Richtige Antwort C ✅" 
+    }, 
+    correct: "c" 
+},
+*/
+
+const quizData = [
+    // --- Beispiel-Fragen (Bitte ersetzen oder löschen) ---
+
+    // Kategorie 1: Geographie
+    { 
+        category: "Geographie", 
+        q: "Was ist die Hauptstadt von Frankreich?", 
+        a: { 
+            a: "Berlin 🇩🇪", 
+            b: "Paris 🇫🇷", 
+            c: "Rom 🇮🇹" 
+        }, 
+        correct: "b" 
+    },
+    { 
+        category: "Geographie", 
+        q: "Welcher ist der längste Fluss der Welt?", 
+        a: { 
+            a: "Nil 🏞️", 
+            b: "Amazonas 🌳", 
+            c: "Donau 🇪🇺" 
+        }, 
+        correct: "a" // Anmerkung: Je nach Messmethode ist es manchmal auch der Amazonas
+    },
+
+    // Kategorie 2: Sehenswürdigkeiten
+    { 
+        category: "Sehenswürdigkeiten", 
+        q: "In welcher Stadt steht die Freiheitsstatue?", 
+        a: { 
+            a: "Washington D.C. 🏛️", 
+            b: "Los Angeles 🎬", 
+            c: "New York City 🗽" 
+        }, 
+        correct: "c" 
+    },
+    { 
+        category: "Sehenswürdigkeiten", 
+        q: "Wie heißt der berühmte schiefe Turm in Italien?", 
+        a: { 
+            a: "Schiefer Turm von Pisa 🇮🇹", 
+            b: "Eiffelturm 🇫🇷", 
+            c: "Kolosseum 🏛️" 
+        }, 
+        correct: "a" 
+    },
+
+    // --- Fügen Sie hier Ihre weiteren Fragen ein ---
+
+];
+
+
+// ===========================================================================
+// --- Ab hier muss nichts mehr geändert werden. Die Magie geschieht automatisch! ---
+// ===========================================================================
+
+const quizContainer = document.getElementById('dynamic-quiz-container');
+const quizForm = document.getElementById('quiz-form');
+const resultContainer = document.getElementById('result');
+const submitButton = document.getElementById('submit-btn');
+const retryButton = document.getElementById('retry-btn');
+const progressBar = document.getElementById('progress-bar');
+
+function stripEmojis(text) {
+    return text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '').trim();
+}
+
+function speakText(textToSpeak) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(stripEmojis(textToSpeak));
+        utterance.lang = 'de-DE';
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+    } else {
+        alert("Ihr Browser unterstützt leider keine Sprachausgabe.");
+    }
+}
+
+function renderQuiz() {
+    quizContainer.innerHTML = '';
+    const categories = [...new Set(quizData.map(item => item.category))];
+    
+    categories.forEach(category => {
+        const section = document.createElement('div');
+        section.className = 'question-section';
+        
+        const heading = document.createElement('h2');
+        heading.textContent = category;
+        section.appendChild(heading);
+
+        const categoryQuestions = quizData.filter(item => item.category === category);
+
+        categoryQuestions.forEach(item => {
+            const questionIndex = quizData.indexOf(item);
+            let answersHtml = '';
+            const answerKeys = Object.keys(item.a).sort(() => Math.random() - 0.5);
+
+            answerKeys.forEach(key => {
+                answersHtml += `
+                    <label>
+                        <input type="radio" name="q${questionIndex}" value="${key}">
+                        <span class="answer-text">${item.a[key]}</span>
+                        <button type="button" class="speak-btn" data-text-to-read="${item.a[key]}">🔊</button>
+                    </label>
+                `;
+            });
+
+            const questionBlock = document.createElement('div');
+            questionBlock.className = 'question-block';
+            questionBlock.id = `block${questionIndex}`;
+            questionBlock.innerHTML = `
+                <div class="question-title-container">
+                   <span>${questionIndex + 1}. ${item.q}</span>
+                   <button type="button" class="speak-btn" data-text-to-read="${item.q}">🔊</button>
+                </div>
+                <div class="answers">${answersHtml}</div>
+            `;
+            section.appendChild(questionBlock);
+        });
+        quizContainer.appendChild(section);
+    });
+    updateProgressBar();
+}
+
+function updateProgressBar() {
+    const totalQuestions = quizData.length;
+    const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+    const progressPercentage = totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
+    progressBar.style.width = `${progressPercentage}%`;
+    progressBar.textContent = `${answeredQuestions} / ${totalQuestions}`;
+}
+
+function checkAnswers(event) {
+    event.preventDefault();
+    let score = 0;
+
+    quizData.forEach((item, index) => {
+        const selector = `input[name="q${index}"]:checked`;
+        const userAnswerNode = quizForm.querySelector(selector);
+        
+        document.querySelectorAll(`#block${index} .answers label`).forEach(label => {
+            const input = label.querySelector('input');
+            input.disabled = true;
+            if (input.value === item.correct) {
+                label.classList.add('correct');
+            }
+        });
+
+        if (userAnswerNode) {
+            if (userAnswerNode.value === item.correct) {
+                score++;
+            } else {
+                userAnswerNode.parentElement.classList.add('incorrect');
+            }
+        }
+    });
+
+    resultContainer.innerHTML = `🎉 Du hast ${score} von ${quizData.length} Punkten erreicht! 🎉`;
+    resultContainer.classList.remove('hidden');
+    submitButton.classList.add('hidden');
+    retryButton.classList.remove('hidden');
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+
+function resetQuiz() {
+    quizForm.reset();
+    document.querySelectorAll('.answers label').forEach(label => {
+        label.classList.remove('correct', 'incorrect');
+    });
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.disabled = false;
+    });
+
+    resultContainer.classList.add('hidden');
+    submitButton.classList.remove('hidden');
+    retryButton.classList.add('hidden');
+    updateProgressBar();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+quizForm.addEventListener('submit', checkAnswers);
+quizForm.addEventListener('change', updateProgressBar);
+retryButton.addEventListener('click', resetQuiz);
+quizContainer.addEventListener('click', function(event) {
+    if (event.target.classList.contains('speak-btn')) {
+        const text = event.target.dataset.textToRead;
+        speakText(text);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', renderQuiz);
+</script>
+
+</body>
+</html>
