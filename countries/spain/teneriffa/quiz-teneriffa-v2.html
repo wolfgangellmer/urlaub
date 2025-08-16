@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Das ultimative Teneriffa Urlaubs-Quiz 🌴☀️</title>
+
+<!-- Moderne Schriftarten von Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --bg-gradient-start: #a2d2ff;
+        --bg-gradient-end: #fff8e7;
+        --container-bg: rgba(255, 255, 255, 0.9);
+        --header-color: #FF7F50;
+        --text-color: #333;
+        --question-color: #008080;
+        --accent-color: #FFB347;
+        --correct-bg: #e0f2f1;
+        --correct-border: #008080;
+        --incorrect-bg: #ffebee;
+        --incorrect-border: #d32f2f;
+        --font-main: 'Poppins', sans-serif;
+        --font-display: 'Pacifico', cursive;
+    }
+
+    body {
+        font-family: var(--font-main);
+        background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 70%);
+        background-attachment: fixed;
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+    }
+
+    header {
+        color: white;
+        text-align: center;
+        padding: 25px 15px;
+        font-family: var(--font-display);
+        font-size: 2.5em;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        background-color: var(--header-color);
+    }
+
+    .container {
+        padding: 20px;
+        max-width: 700px;
+        margin: 30px auto;
+        background: var(--container-bg);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .progress-container {
+        width: 100%;
+        background-color: #eee;
+        border-radius: 10px;
+        margin-bottom: 25px;
+    }
+    .progress-bar {
+        width: 0%;
+        height: 22px;
+        background: linear-gradient(to right, var(--accent-color), var(--header-color));
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        transition: width 0.4s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    h2 {
+        color: var(--question-color);
+        text-align: center;
+        margin-top: 10px;
+        border-bottom: 3px solid var(--accent-color);
+        padding-bottom: 10px;
+        font-weight: 600;
+    }
+
+    /* NEUE STRUKTUR für Fragen-Blöcke mit Bildern */
+    .question-block {
+        margin-bottom: 30px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        overflow: hidden; /* Wichtig für abgerundete Ecken beim Bild */
+    }
+    
+    .question-header {
+        position: relative;
+        height: 150px;
+        background-size: cover;
+        background-position: center;
+        padding: 15px;
+        display: flex;
+        align-items: flex-end; /* Text unten platzieren */
+        color: white;
+    }
+    /* Overlay für bessere Lesbarkeit */
+    .question-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+    }
+
+    .question-title-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 1.2em;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        z-index: 1; /* Über dem Overlay */
+        width: 100%;
+    }
+    .question-title-container span {
+        flex-grow: 1;
+    }
+    
+    .answers {
+        padding: 15px;
+    }
+    .answers label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 8px 0;
+        padding: 12px 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid #ddd;
+        background: #f9f9f9;
+    }
+
+    .answers label:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .speak-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.3em;
+        line-height: 1;
+        padding: 0 5px;
+        color: #fff; /* Farbe für Button im Header */
+        transition: color 0.2s;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    }
+    .answers .speak-btn {
+        color: #777; /* Farbe für Buttons bei den Antworten */
+        text-shadow: none;
+    }
+    .speak-btn:hover { color: var(--accent-color); }
+    .answer-text { flex-grow: 1; }
+
+    .answers input[type="radio"] {
+        margin-right: 5px;
+        accent-color: var(--header-color);
+    }
+    
+    .answers label.correct {
+        background-color: var(--correct-bg);
+        border-color: var(--correct-border);
+        font-weight: 600;
+        color: var(--correct-border);
+    }
+    .answers label.correct::before { content: '✔ '; }
+
+    .answers label.incorrect {
+        background-color: var(--incorrect-bg);
+        border-color: var(--incorrect-border);
+    }
+    .answers label.incorrect::before { content: '✖ '; }
+
+    .button {
+        color: white;
+        border: none;
+        padding: 15px 25px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 10px;
+        display: block;
+        width: 100%;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+
+    #submit-btn { background: var(--header-color); }
+    #retry-btn { background-color: #6c757d; }
+
+    #result {
+        font-size: 1.3em;
+        font-weight: 600;
+        text-align: center;
+        margin-top: 25px;
+        color: var(--question-color);
+        padding: 20px;
+        border-radius: 10px;
+        background-color: var(--container-bg);
+    }
+    
+    .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<header>Das ultimative Teneriffa Quiz</header>
+
+<div class="container">
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar">0 / 50</div>
+    </div>
+
+    <form id="quiz-form">
+        <div id="dynamic-quiz-container"></div>
+        <button type="submit" id="submit-btn" class="button">Auswerten</button>
+    </form>
+    
+    <div id="result" class="hidden"></div>
+    <button id="retry-btn" class="button hidden">Erneut versuchen</button>
+</div>
+
+<script>
+// HINWEIS: Sie können die 'image'-URLs durch Ihre eigenen Bild-URLs ersetzen.
+// Ich habe lizenzfreie Bilder von Unsplash und Pexels als Platzhalter verwendet.
+const quizData = [
+    { category: "Teneriffa Allgemein", q: "Zu welcher Inselgruppe gehört Teneriffa?", a: { b: "Kanaren 🇮🇨", a: "Balearen 🇪🇸", c: "Azoren 🇵🇹" }, correct: "b", image: "https://images.pexels.com/photos/10176885/pexels-photo-10176885.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Teneriffa Allgemein", q: "Welches Meer umgibt Teneriffa?", a: { b: "Atlantischer Ozean 🌊", a: "Mittelmeer 🏖️", c: "Pazifischer Ozean 🗺️" }, correct: "b", image: "https://images.pexels.com/photos/355321/pexels-photo-355321.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Teneriffa Allgemein", q: "Wie nennen die Einheimischen Teneriffa wegen des ganzjährig milden Wetters?", a: { a: "Insel des ewigen Frühlings 🌺", b: "Insel der tausend Vulkane 🌋", c: "Insel der Winde 💨" }, correct: "a", image: "https://images.pexels.com/photos/1484509/pexels-photo-1484509.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Teneriffa Allgemein", q: "Welche ist die Hauptstadt von Teneriffa?", a: { a: "Santa Cruz de Tenerife 🏛️", b: "La Laguna ⛪", c: "Puerto de la Cruz 🛳️" }, correct: "a", image: "https://images.pexels.com/photos/13812543/pexels-photo-13812543.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Teneriffa Allgemein", q: "Welche Farbe hat die Flagge der Kanarischen Inseln?", a: { c: "Weiß, Blau und Gelb ⚪🔵💛", a: "Rot und Gelb ❤️💛", b: "Nur Blau und Weiß 🔵⚪" }, correct: "c", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Flag_of_the_Canary_Islands.svg/800px-Flag_of_the_Canary_Islands.svg.png" },
+    { category: "Teneriffa Allgemein", q: "Welcher Kontinent liegt östlich von Teneriffa?", a: { b: "Afrika 🌍", a: "Europa 🇪🇺", c: "Südamerika 🌎" }, correct: "b", image: "https://images.pexels.com/photos/147413/twitter-facebook-together-exchange-of-information-147413.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Teneriffa Allgemein", q: "Welche Insel ist die größte der Kanaren?", a: { b: "Teneriffa 🏝️", a: "Gran Canaria 🇮🇨", c: "Lanzarote 🌋" }, correct: "b", image: "https://images.pexels.com/photos/1086432/pexels-photo-1086432.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    
+    { category: "Sehenswürdigkeiten & Natur", q: "Wie heißt der höchste Berg Spaniens, der auf Teneriffa steht?", a: { a: "Teide 🌋", b: "Großglockner (Österreich) 🇦🇹", c: "Zugspitze (Deutschland) 🇩🇪" }, correct: "a", image: "https://images.pexels.com/photos/2265955/pexels-photo-2265955.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Sehenswürdigkeiten & Natur", q: "Welche besondere Farbe hat der Sand an vielen Stränden im Norden?", a: { b: "Tiefschwarz 🖤", a: "Schneeweiß 🤍", c: "Rosarot 🌸" }, correct: "b", image: "https://images.pexels.com/photos/1681329/pexels-photo-1681329.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Sehenswürdigkeiten & Natur", q: "Welcher uralte Baum ist ein berühmtes Wahrzeichen in Icod de los Vinos?", a: { a: "Drachenbaum 🐉🌳", b: "Affenbrotbaum  BA", c: "Mammutbaum 🌲" }, correct: "a", image: "https://images.pexels.com/photos/13098523/pexels-photo-13098523.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Sehenswürdigkeiten & Natur", q: "Welche Aktivität ist im Teide-Nationalpark besonders beliebt?", a: { a: "Wandern & Sterne beobachten 🥾🌌", b: "Surfen & Tauchen 🏄‍♂️🤿", c: "Skifahren & Rodeln ⛷️🛷" }, correct: "a", image: "https://images.pexels.com/photos/1107936/pexels-photo-1107936.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Sehenswürdigkeiten & Natur", q: "Welche Stadt ist UNESCO-Weltkulturerbe für ihre koloniale Altstadt?", a: { a: "La Laguna ⛪", b: "Santa Cruz 🏙️", c: "Los Cristianos 🏖️" }, correct: "a", image: "https://images.pexels.com/photos/672583/pexels-photo-672583.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Sehenswürdigkeiten & Natur", q: "Wie nennt man die beeindruckenden Steilklippen im Westen der Insel?", a: { a: "Los Gigantes 🗿", b: "Las Teresitas 🏖️", c: "El Médano 🪁" }, correct: "a", image: "https://images.pexels.com/photos/13812540/pexels-photo-13812540.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Sehenswürdigkeiten & Natur", q: "Welches astronomische Observatorium befindet sich auf Teneriffa?", a: { c: "Teide-Observatorium 🔭", a: "La Palma-Observatorium 🇮🇨", b: "Mauna Kea-Observatorium 🇺🇸" }, correct: "c", image: "https://images.pexels.com/photos/3981757/pexels-photo-3981757.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+
+    { category: "Tierwelt", q: "Welcher kleine Vogel ist nach den Kanarischen Inseln benannt?", a: { a: "Kanarienvogel 🐤", b: "Papageientaucher 🐧", c: "Wellensittich 🦜" }, correct: "a", image: "https://images.pexels.com/photos/2662434/pexels-photo-2662434.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Tierwelt", q: "Welche Meerestiere kann man bei einer Bootstour vor der Küste häufig beobachten?", a: { a: "Grindwale & Delfine 🐋🐬", b: "Eisbären & Robben 🐻‍❄️🦭", c: "Pinguine & Seelöwen 🐧🦭" }, correct: "a", image: "https://images.pexels.com/photos/64219/dolphin-marine-mammals-water-sea-64219.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Tierwelt", q: "Welches Reptil sonnt sich häufig auf den warmen Felsen und Mauern?", a: { a: "Kanareneidechse 🦎", b: "Krokodil 🐊", c: "Leguan 🐍" }, correct: "a", image: "https://images.pexels.com/photos/1418597/pexels-photo-1418597.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Tierwelt", q: "Welches Tier ist auf dem offiziellen Wappen von Teneriffa abgebildet?", a: { b: "Ein Drache 🐉", a: "Ein Adler 🦅", c: "Ein Löwe 🦁" }, correct: "b", image: "https://images.pexels.com/photos/207000/pexels-photo-207000.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    
+    { category: "Loro Parque", q: "Was bedeutet der Name 'Loro Parque' auf Deutsch?", a: { a: "Papageien-Park 🦜", b: "Löwen-Park 🦁", c: "Delfin-Park 🐬" }, correct: "a", image: "https://images.pexels.com/photos/1012982/pexels-photo-1012982.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Loro Parque", q: "Welche Tiere leben im 'Planet Penguin', einer Anlage mit echtem Schnee?", a: { a: "Pinguine 🐧", b: "Eisbären 🐻‍❄️", c: "Schneeleoparden 🐆" }, correct: "a", image: "https://images.pexels.com/photos/920152/pexels-photo-920152.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Loro Parque", q: "Durch welches beeindruckende Aquarium kann man in einem Tunnel laufen?", a: { a: "Hai-Tunnel 🦈", b: "Quallen-Galaxie 🎐", c: "Korallenriff 🐠" }, correct: "a", image: "https://images.pexels.com/photos/1287145/pexels-photo-1287145.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Loro Parque", q: "Welche großen, schwarz-weißen Meeressäuger sind für ihre Shows bekannt?", a: { b: "Orcas 🐋", a: "Belugas ⚪", c: "Seekühe 🌊" }, correct: "b", image: "https://images.pexels.com/photos/207937/pexels-photo-207937.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Loro Parque", q: "Welche Tiere klatschen bei ihrer Vorführung begeistert mit den Flossen?", a: { a: "Seelöwen 🦭", b: "Otter 🦦", c: "Biber 🛶" }, correct: "a", image: "https://images.pexels.com/photos/568021/pexels-photo-568021.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    
+    { category: "Siam Park", q: "Welches Land diente als thematische Inspiration für den Siam Park?", a: { a: "Thailand 🇹🇭", b: "Indonesien 🇮🇩", c: "Japan 🇯🇵" }, correct: "a", image: "https://images.pexels.com/photos/415708/pexels-photo-415708.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Siam Park", q: "Wie heißt die fast senkrechte Rutsche, die durch ein Haifischbecken führt?", a: { a: "Tower of Power 🗼", b: "Dragon 🐉", c: "The Volcano 🌋" }, correct: "a", image: "https://images.pexels.com/photos/165971/pexels-photo-165971.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Siam Park", q: "Was ist der 'Palace of Waves'?", a: { a: "Ein Wellenbad mit riesigen Wellen 🌊", b: "Ein entspannter Ruhebereich 🧘", c: "Ein thailändisches Restaurant 🍛" }, correct: "a", image: "https://images.pexels.com/photos/1151873/pexels-photo-1151873.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Siam Park", q: "Was ist das Besondere am 'Mai Thai River'?", a: { a: "Es ist der längste 'Lazy River' der Welt 🏞️", b: "Er ist extrem schnell und reißend 🌪️", c: "Er ist komplett unterirdisch 🚇" }, correct: "a", image: "https://images.pexels.com/photos/261327/pexels-photo-261327.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Siam Park", q: "Welche Auszeichnung hat der Siam Park mehrfach in Folge erhalten?", a: { a: "Bester Wasserpark der Welt 🏆", b: "Größter Wasserpark Europas 🇪🇺", c: "Sicherster Park der Kanaren ✅" }, correct: "a", image: "https://images.pexels.com/photos/258352/pexels-photo-258352.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+
+    { category: "Essen & Trinken", q: "Wie heißen die typischen kanarischen Schrumpelkartoffeln?", a: { a: "Papas Arrugadas 🥔", b: "Patatas Bravas 🌶️", c: "Tortilla Española 🍳" }, correct: "a", image: "https://images.pexels.com/photos/1437267/pexels-photo-1437267.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Essen & Trinken", q: "Wie nennt man die würzigen roten und grünen Soßen, die zu vielen Gerichten gereicht werden?", a: { b: "Mojo Rojo & Mojo Verde 🌶️🌿", a: "Salsa & Guacamole 🍅🥑", c: "Ketchup & Mayo 🥫" }, correct: "b", image: "https://images.pexels.com/photos/1059942/pexels-photo-1059942.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Essen & Trinken", q: "Welches traditionelle Getränk ist ein Likör aus Rum und Honig?", a: { b: "Ron Miel 🍯", a: "Sangría 🍷", c: "Barraquito ☕" }, correct: "b", image: "https://images.pexels.com/photos/616836/pexels-photo-616836.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Essen & Trinken", q: "Welche gelbe Frucht wird auf Teneriffa in großen Plantagen angebaut?", a: { c: "Bananen 🍌", a: "Zitronen 🍋", b: "Ananas 🍍" }, correct: "c", image: "https://images.pexels.com/photos/61127/pexels-photo-61127.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Essen & Trinken", q: "Was ist 'Gofio'?", a: { a: "Ein Mehl aus geröstetem Getreide 🌾", b: "Ein Eintopf mit Kichererbsen 🍲", c: "Ein lokaler Ziegenkäse 🧀" }, correct: "a", image: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Essen & Trinken", q: "Was ist ein 'Barraquito'?", a: { a: "Eine Kaffeespezialität ☕", b: "Ein kleiner Tintenfisch 🦑", c: "Ein süßes Gebäck 🥐" }, correct: "a", image: "https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    
+    { category: "Sprache & Kultur", q: "Welche Sprache spricht man hauptsächlich auf Teneriffa?", a: { b: "Spanisch 🇪🇸", a: "Portugiesisch 🇵🇹", c: "Italienisch 🇮🇹" }, correct: "b", image: "https://images.pexels.com/photos/2085810/pexels-photo-2085810.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Sprache & Kultur", q: "Wie sagt man 'Hallo' auf Spanisch?", a: { b: "Hola 👋", a: "Hello 👋", c: "Ciao 👋" }, correct: "b", image: "https://images.pexels.com/photos/3771120/pexels-photo-3771120.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Sprache & Kultur", q: "Wie sagt man 'Danke'?", a: { a: "Gracias 🙏", b: "Bitte 🙏", c: "Salud 🙏" }, correct: "a", image: "https://images.pexels.com/photos/4126743/pexels-photo-4126743.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Sprache & Kultur", q: "Was bedeutet 'Playa'?", a: { b: "Strand 🏖️", a: "Sonne ☀️", c: "Stadt 🏙️" }, correct: "b", image: "https://images.pexels.com/photos/1484510/pexels-photo-1484510.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Sprache & Kultur", q: "Was bedeutet 'Guagua' im kanarischen Spanisch?", a: { a: "Bus 🚌", b: "Wasser 💧", c: "Hund 🐶" }, correct: "a", image: "https://images.pexels.com/photos/3419692/pexels-photo-3419692.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+    { category: "Sprache & Kultur", q: "Welches riesige Fest, bekannt für seine Kostüme und Umzüge, findet im Februar statt?", a: { a: "Karneval von Santa Cruz 🎭", b: "Oktoberfest 🍺", c: "Tomatina (Tomatenfest) 🍅" }, correct: "a", image: "https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=600&h=200&dpr=1" },
+];
+
+const quizContainer = document.getElementById('dynamic-quiz-container');
+const quizForm = document.getElementById('quiz-form');
+const resultContainer = document.getElementById('result');
+const submitButton = document.getElementById('submit-btn');
+const retryButton = document.getElementById('retry-btn');
+const progressBar = document.getElementById('progress-bar');
+
+function stripEmojis(text) {
+    return text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '').trim();
+}
+
+function speakText(textToSpeak) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(stripEmojis(textToSpeak));
+        utterance.lang = 'de-DE';
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+    } else {
+        alert("Ihr Browser unterstützt leider keine Sprachausgabe.");
+    }
+}
+
+function renderQuiz() {
+    quizContainer.innerHTML = '';
+    const categories = [...new Set(quizData.map(item => item.category))];
+    
+    categories.forEach(category => {
+        const section = document.createElement('div');
+        section.className = 'question-section';
+        const heading = document.createElement('h2');
+        heading.textContent = category;
+        section.appendChild(heading);
+
+        quizData.filter(item => item.category === category).forEach(item => {
+            const questionIndex = quizData.indexOf(item);
+            let answersHtml = '';
+            const answerKeys = Object.keys(item.a).sort(() => Math.random() - 0.5);
+
+            answerKeys.forEach(key => {
+                answersHtml += `
+                    <label>
+                        <input type="radio" name="q${questionIndex}" value="${key}">
+                        <span class="answer-text">${item.a[key]}</span>
+                        <button type="button" class="speak-btn" data-text-to-read="${item.a[key]}">🔊</button>
+                    </label>
+                `;
+            });
+
+            const questionBlock = document.createElement('div');
+            questionBlock.className = 'question-block';
+            questionBlock.id = `block${questionIndex}`;
+            questionBlock.innerHTML = `
+                <div class="question-header" style="background-image: url('${item.image}')">
+                    <div class="question-title-container">
+                       <span>${questionIndex + 1}. ${item.q}</span>
+                       <button type="button" class="speak-btn" data-text-to-read="${item.q}">🔊</button>
+                    </div>
+                </div>
+                <div class="answers">${answersHtml}</div>
+            `;
+            section.appendChild(questionBlock);
+        });
+        quizContainer.appendChild(section);
+    });
+    updateProgressBar();
+}
+
+function updateProgressBar() {
+    const totalQuestions = quizData.length;
+    const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+    const progressPercentage = (answeredQuestions / totalQuestions) * 100;
+    progressBar.style.width = `${progressPercentage}%`;
+    progressBar.textContent = `${answeredQuestions} / ${totalQuestions}`;
+}
+
+function checkAnswers(event) {
+    event.preventDefault();
+    let score = 0;
+
+    quizData.forEach((item, index) => {
+        const selector = `input[name="q${index}"]:checked`;
+        const userAnswerNode = quizForm.querySelector(selector);
+        
+        document.querySelectorAll(`#block${index} .answers label`).forEach(label => {
+            const input = label.querySelector('input');
+            input.disabled = true;
+            if (input.value === item.correct) {
+                label.classList.add('correct');
+            }
+        });
+
+        if (userAnswerNode) {
+            if (userAnswerNode.value === item.correct) {
+                score++;
+            } else {
+                userAnswerNode.parentElement.classList.add('incorrect');
+            }
+        }
+    });
+
+    resultContainer.innerHTML = `☀️ Du hast ${score} von ${quizData.length} Punkten erreicht! ☀️`;
+    resultContainer.classList.remove('hidden');
+    submitButton.classList.add('hidden');
+    retryButton.classList.remove('hidden');
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+
+function resetQuiz() {
+    quizForm.reset();
+    document.querySelectorAll('.answers label').forEach(label => {
+        label.classList.remove('correct', 'incorrect');
+    });
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.disabled = false;
+    });
+
+    resultContainer.classList.add('hidden');
+    submitButton.classList.remove('hidden');
+    retryButton.classList.add('hidden');
+    updateProgressBar();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// Event Listeners
+quizForm.addEventListener('submit', checkAnswers);
+quizForm.addEventListener('change', updateProgressBar);
+retryButton.addEventListener('click', resetQuiz);
+quizContainer.addEventListener('click', function(event) {
+    if (event.target.classList.contains('speak-btn')) {
+        event.preventDefault();
+        const text = event.target.dataset.textToRead;
+        speakText(text);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', renderQuiz);
+</script>
+
+</body>
+</html>
